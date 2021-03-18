@@ -19,6 +19,7 @@ defmodule Servy.Handler do
     |> track
     |> format_response
   end
+
   def route(%Conv{method: "GET", path: "/pages/" <> file_name} = conv) do
       @pages_path
       |> Path.join("#{file_name}.html")
@@ -55,14 +56,6 @@ defmodule Servy.Handler do
 
     #{conv.resp_body}
     """
-  end
-
-  defp find_bear(id) do
-    %{
-      "1" => "Teddy",
-      "2" => "Smokey",
-      "3" => "Paddington"
-    }[id] || "Bear #{id}"
   end
 end
 
