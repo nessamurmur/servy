@@ -6,6 +6,7 @@ defmodule Servy.Handler do
   import Servy.Parser, only: [parse: 1]
   import Servy.FileHandler, only: [handle_file: 2]
   alias Servy.Conv
+  alias Servy.BearController
 
   @pages_path Path.expand("../../pages", __DIR__)
   @doc "Transforms a request into a response"
@@ -30,16 +31,16 @@ defmodule Servy.Handler do
   end
 
   def route(%Conv{method: "GET", path: "/bears"} = conv) do
-    %Conv{ conv | status: 200, resp_body: "Teddy, Smokey, Paddington" }
+    BearController.index(conv)
   end
 
-  def route(%Conv{method: "GET", path: "/bears/" <> id}) do
-    %Conv{ status: 200, resp_body: find_bear(id) }
+  def route(%Conv{method: "GET", path: "/bears/" <> id} = conv) do
+    params = Map.put(conv.params, "id", id)
+    BearController.show(conv, params)
   end
 
   def route(%Conv{method: "POST", path: "/bears"} = conv) do
-    %{ conv | status: 201,
-              resp_body: "Created a #{conv.params["type"]} bear named #{conv.params["name"]}"}
+    BearController.create(conv, conv.params)
   end
 
   def route(%Conv{} = conv) do
