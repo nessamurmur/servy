@@ -4,6 +4,7 @@ defmodule Servy.Parser do
   alias JSON
 
   def parse(request) do
+    IO.puts request
     [top, params_string] = String.split(request,"\r\n\r\n")
 
     [request_line | header_lines] = String.split(top, "\r\n")
@@ -34,7 +35,8 @@ defmodule Servy.Parser do
   end
 
   def parse_params("application/json", params_string) do
-    JSON.decode(params_string)
+    {:ok, json} = JSON.decode(params_string)
+    json
   end
 
   def parse_params(_, _), do: %{}
